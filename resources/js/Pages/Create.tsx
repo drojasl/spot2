@@ -2,14 +2,18 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function Create() {
-    const { data, setData, post, processing } = useForm({
+    const { data, setData, post } = useForm({
         url: '',
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post('/short/store');
     };
+
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
+    const csrfToken = csrfTokenElement ? csrfTokenElement.content : '';
+
 
     return (
         <AuthenticatedLayout
@@ -27,7 +31,7 @@ export default function Create() {
                         <div className="p-8 text-gray-900">
                             <h2 className="text-2xl font-semibold mb-6">Add New URL</h2>
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').content} />
+                                <input type="hidden" name="_token" value={csrfToken} />
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Insert URL:</label>
                                     <input 

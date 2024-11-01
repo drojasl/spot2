@@ -3,13 +3,34 @@ import { Head, Link } from '@inertiajs/react';
 import { FaTrash } from 'react-icons/fa';
 import { FaCopy } from 'react-icons/fa';
 
-export default function Dashboard({ urls }) {
-    const handleDelete = async (id) => {
+interface Url {
+    id: number;
+    url: string;
+    shortened: string;
+}
+
+interface DashboardProps {
+    urls: {
+        data: Url[];
+        prev_page_url?: string | null;
+        next_page_url?: string | null;
+    };
+}
+
+export default function Dashboard({ urls }: DashboardProps) {
+    const handleDelete = async (id: number) => {
         if (confirm('Are you sure you want to delete this URL?')) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                return;
+            }
+            
             await fetch(`/short/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-CSRF-TOKEN': csrfToken,
                     'Content-Type': 'application/json',
                 },
             });
@@ -18,7 +39,7 @@ export default function Dashboard({ urls }) {
         }
     };
 
-    const handleCopy = (shortened) => {
+    const handleCopy = (shortened: string) => {
         const appUrl = import.meta.env.VITE_APP_URL
         navigator.clipboard.writeText(appUrl+"/go/"+shortened);
     };
@@ -81,7 +102,7 @@ export default function Dashboard({ urls }) {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td className="py-2 px-4" colSpan="3">
+                                            <td className="py-2 px-4" colSpan={3}>
                                                 No URLs found.
                                             </td>
                                         </tr>
