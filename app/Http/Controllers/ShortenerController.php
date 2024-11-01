@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use App\Models\ShortenedUrl;
 use App\Repositories\ShortenedUrlRepositoryInterface;
 
 class ShortenerController extends Controller
@@ -64,6 +63,33 @@ class ShortenerController extends Controller
         }
     }
 
+    /**
+     * Redirect to the original URL based on shortened code.
+     *
+     * @OA\Get(
+     *     path="/go/{short}",
+     *     summary="Redirect to the original URL",
+     *     tags={"URL Shortener"},
+     *     @OA\Parameter(
+     *         name="short",
+     *         in="path",
+     *         description="Shortened code for the URL",
+     *         required=true,
+     *         @OA\Schema(type="string", example="abc123")
+     *     ),
+     *     @OA\Response(
+     *         response=302,
+     *         description="Redirection to the original URL"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="URL not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="URL not found.")
+     *         )
+     *     )
+     * )
+     */
     public function go($short)
     {
         $shortenedUrl = $this->shortenedUrlRepository->findByShortened($short);

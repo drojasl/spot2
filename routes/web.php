@@ -1,5 +1,27 @@
 <?php
 
+/**
+ * @OA\OpenApi(
+ *     @OA\Info(
+ *         version="1.0.0",
+ *         title="My API",
+ *         description="Documentación de la API para gestionar URLs acortadas",
+ *         @OA\Contact(
+ *             email="support@example.com"
+ *         ),
+ *         @OA\License(
+ *             name="MIT",
+ *             url="https://opensource.org/licenses/MIT"
+ *         )
+ *     ),
+ *     @OA\Server(
+ *         url="http://localhost:8000",
+ *         description="API Local"
+ *     )
+ * )
+ */
+
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortenerController;
 use Illuminate\Foundation\Application;
